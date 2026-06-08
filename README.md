@@ -38,3 +38,30 @@ The application logic is designed around a core `Calculator` class with the foll
 
 ## 🧠 Key Takeaways
 This planning phase highlights the importance of mapping all user interaction possibilities and state transitions before writing code, ensuring a robust, crash-free, and predictable user experience.
+
+---
+
+## 🗺️ Application Flowchart & System Logic
+
+The application follows a structured state machine modeled below, mapping out user interactions from startup to shutdown:
+
+### 1. Initialization (INÍCIO)
+* **App Launch:** The application opens, initializes a clean state, and displays `"0"` on the screen.
+
+### 2. Decision Tree (Input Handling)
+When a user presses a key, the system routes the input based on its type:
+* **Digit (0-9):** Accumulates digits and appends them to the current active number, then updates the display.
+* **Decimal Point (.):** Checks if a decimal point already exists. If *Yes*, it ignores the input; if *No*, it appends it to the number.
+* **Operation (+, -, x, ÷):** Checks if a pending operation already exists. If *Yes*, it overrides the previous operator; if *No*, it stores the operand and operator in memory.
+* **Special Actions (C / AC / %):** * `C`: Clears the current input entry.
+  * `AC`: Resets the entire application state (Full Wipe).
+  * `% / +/-`: Applies modifiers to the current value.
+
+### 3. Execution & Evaluation (=)
+When the user triggers the evaluation (`=`):
+* **Division by Zero Validation:** Checks if the operation attempts to divide by zero. If *Yes*, routes to an **Error State** displaying `"Error"`. If *No*, executes the calculation (`num1 op num2`).
+* **Result Chaining:** Displays the final result. The output automatically becomes the new `num1` for subsequent chained operations.
+* **Memory Management:** Handles standard memory states (`M+`, `M-`, `MR`, `MC`) if prompted.
+
+### 4. Termination (FIM)
+* **Exit:** Closes or minimizes the application, saving or clearing temporary memory states.
