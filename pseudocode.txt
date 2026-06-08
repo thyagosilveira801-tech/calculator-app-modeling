@@ -1,0 +1,81 @@
+START
+
+  PRINT "Calculator Loop (Type OFF to exit)"
+  accumulator <- NULL
+  currentOp <- NULL
+
+  WHILE TRUE DO
+
+      PRINT "Enter a number, operation (+ - * /), '=', 'C' or 'OFF':"
+      READ input
+
+      IF input == "OFF" THEN
+          PRINT "Shutting down..."
+          EXIT_LOOP
+      ENDIF
+
+      IF input == "C" THEN
+          accumulator <- NULL
+          currentOp <- NULL
+          PRINT "Cleared."
+          CONTINUE
+      ENDIF
+
+      IF input == "=" THEN
+          IF accumulator == NULL THEN
+              PRINT "Nothing to calculate."
+          ELSE
+              PRINT "Result: ", accumulator
+          ENDIF
+          CONTINUE
+      ENDIF
+
+      IF IS_NUMBER(input) THEN
+          num <- CONVERT_TO_NUMBER(input)
+
+          IF accumulator == NULL THEN
+              // First number of the expression
+              accumulator <- num
+          ELSE
+              // Accumulator exists; checking for a pending operation
+              IF currentOp == NULL THEN
+                  PRINT "Operation not specified. Please enter +, -, * or /."
+                  CONTINUE
+              ENDIF
+
+              IF currentOp == "+" THEN
+                  accumulator <- accumulator + num
+              ELSE IF currentOp == "-" THEN
+                  accumulator <- accumulator - num
+              ELSE IF currentOp == "*" THEN
+                  accumulator <- accumulator * num
+              ELSE IF currentOp == "/" THEN
+                  IF num == 0 THEN
+                      PRINT "Error: Division by zero. Operation ignored."
+                  ELSE
+                      accumulator <- accumulator / num
+                  ENDIF
+              ENDIF
+
+              // After applying the operation, reset the pending operator
+              currentOp <- NULL
+          ENDIF
+
+          CONTINUE
+      ENDIF
+
+      // If it is not a number, '=', or commands, it must be an operator
+      IF input IN {"+", "-", "*", "/"} THEN
+          IF accumulator == NULL THEN
+              PRINT "Please enter a number first."
+          ELSE IF currentOp != NULL THEN
+              PRINT "An operation is already pending: ", currentOp
+          ELSE
+              currentOp <- input
+          ENDIF
+          CONTINUE
+      ENDIF
+
+      // Any other input is considered invalid
+      PRINT "Invalid input."
+  ENDWHILE
